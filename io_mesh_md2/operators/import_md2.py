@@ -94,10 +94,28 @@ def load(operator,
         for triangle in md2_file.triangles:
             bverts = [bm.verts[i] for i in triangle.vertexes]
 
+            # Sometimes faces are duplicated?
             try:
-                bm.faces.new(bverts)
+                bface = bm.faces.new(bverts)
+
             except ValueError:
-                pass
+                continue
+
+            # Coordinate normalization matrix
+            iw = 1 / md2_file.skin_width
+            ih = 1 / md2_file.skin_height
+            st_to_uv = Matrix((
+                (iw,  0,  0,  0),
+                ( 0, ih,  0,  0),
+                ( 0,  0,  1,  0),
+                ( 0,  0,  0,  1)
+            ))
+
+            sts = [md2_file.st_vertexes[i] for i in triangle.st_vertexes]
+            sts = [Vector((*st, 0, 1))for st in sts]
+            uvs = [(st_to_uv @ st)[:2] for st in sts]
+            for uv, loop in zip(uvs, bface.loops):
+                loop[uv_layer].uv = uv
 
         # Transfer bmesh data to object mesh
         bm.to_mesh(ob.data)
