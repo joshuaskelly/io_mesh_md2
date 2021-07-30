@@ -94,11 +94,12 @@ def load(operator,
         for triangle in md2_file.triangles:
             bverts = [bm.verts[i] for i in triangle.vertexes]
 
-            # Sometimes faces are duplicated?
             try:
+                # Create a new face
                 bface = bm.faces.new(bverts)
 
             except ValueError:
+                # Sometimes faces are duplicated?
                 continue
 
             # Coordinate normalization matrix
@@ -111,6 +112,7 @@ def load(operator,
                 ( 0,  0,  0,  1)
             ))
 
+            # Apply UV coordinates
             sts = [md2_file.st_vertexes[i] for i in triangle.st_vertexes]
             sts = [Vector((*st, 0, 1))for st in sts]
             uvs = [(st_to_uv @ st)[:2] for st in sts]
