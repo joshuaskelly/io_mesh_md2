@@ -1,0 +1,21 @@
+# Ignore IDE files
+.idea
+.vscode
+.vs
+/vs
+*.pyproj
+
+# Ignore OS artifacts
+.DS_Store
+
+# Ignore pyenv artifacts
+.python-version
+.venv
+
+# No compiled Python artifacts
+*.pyc
+
+# Ignore build artifacts
+/dist
+
+io_mesh_md2/modules
