@@ -84,9 +84,7 @@ def load(operator,
 
         # Process vertexes
         for vertex in frame.vertexes:
-            vec = Vector(vertex)
-            a = transform @ vec
-            bm.verts.new(a)
+            bm.verts.new(transform @ Vector(vertex))
 
         bm.verts.ensure_lookup_table()
 
