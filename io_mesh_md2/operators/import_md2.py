@@ -172,6 +172,41 @@ def load(operator,
         # Add object to scene
         bpy.context.scene.collection.objects.link(ob)
 
+        # Create shapekeys
+        shape_key= ob.shape_key_add(name=frame.name)
+        shape_key.interpolation = 'KEY_LINEAR'
+        #shape_key.use_relative = True
+
+        for frame in md2_file.frames[1:]:
+            shape_key = ob.shape_key_add(name=frame.name)
+            shape_key.interpolation = 'KEY_LINEAR'
+            #shape_key.use_relative = True
+
+            # Scale matrix
+            sx, sy, sz = frame.scale
+            scale = Matrix((
+                (sx,  0,  0,  0),
+                ( 0, sy,  0,  0),
+                ( 0,  0, sz,  0),
+                ( 0,  0,  0,  1)
+            ))
+
+            # Translation matrix
+            tx, ty, tz = frame.translate
+            translation = Matrix((
+                ( 1,  0,  0, tx),
+                ( 0,  1,  0, ty),
+                ( 0,  0,  1, tz),
+                ( 0,  0,  0,  1)
+            ))
+
+            transform = translation @ scale
+
+            # Process vertexes
+            verts = [transform @ Vector(vertex) for vertex in frame.vertexes]
+            for point, vert in zip(shape_key.data[:], verts):
+                point.co = vert
+
     performance_monitor.pop_scope('Import finished.')
 
     return {'FINISHED'}

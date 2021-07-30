@@ -14,7 +14,6 @@ def all():
     #il.reload(io_mesh_md2.panels)
 
     # Reload top level modules
-    il.reload(io_mesh_md2.api)
     il.reload(io_mesh_md2.patch)
     il.reload(io_mesh_md2.perfmon)
 
