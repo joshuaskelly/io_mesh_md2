@@ -1,4 +1,5 @@
-from io_mesh_md2.api import Md2
+import os
+import struct
 
 import bpy
 import bmesh
@@ -8,6 +9,7 @@ from bpy_extras.io_utils import ImportHelper
 from mathutils import Matrix, Vector
 
 from io_mesh_md2.perfmon import PerformanceMonitor
+from io_mesh_md2.pcx import Pcx
 
 from vgio.quake2 import md2
 
@@ -54,6 +56,47 @@ def load(operator,
 
     # Open MD2 file
     with md2.Md2.open(filepath) as md2_file, performance_monitor.scope():
+        # Create images
+        default_material = None
+        model_directory = os.path.dirname(filepath)
+        for skin in md2_file.skins:
+            skin_path = os.path.join(model_directory, os.path.basename(skin.name))
+            if not os.path.exists(skin_path):
+                performance_monitor.log(f'Could not find skin: {skin.name}')
+                continue
+
+            with open(skin_path, 'rb') as skin_file:
+                pcx = Pcx.read(skin_file)
+
+            palette = tuple(struct.iter_unpack('<BBB', pcx.palette))
+            indexes = struct.unpack(f'<{pcx.width * pcx.height}B', pcx.pixels)
+            pixels = [palette[i] for i in indexes]
+            pixels = [rgb / 255 for pixel in pixels for rgb in (*pixel, 255)]
+
+            image = bpy.data.images.new(
+                skin.name,
+                md2_file.skin_width,
+                md2_file.skin_height
+            )
+            image.pixels = pixels
+
+            # Create material
+            material = bpy.data.materials.new(name=image.name)
+            material.use_nodes = True
+            default_material = default_material or material
+
+            bsdf_node = material.node_tree.nodes['Principled BSDF']
+            bsdf_node.inputs['Specular'].default_value = 0
+            bsdf_node.inputs['Roughness'].default_value = 1
+
+            texture_node = material.node_tree.nodes.new('ShaderNodeTexImage')
+            texture_node.image = image
+            #texture_node.interpolation = 'Closest'
+
+            material.node_tree.links.new(bsdf_node.inputs['Base Color'], texture_node.outputs['Color'])
+
+
+        # Create mesh
         name = 'MD2'
         ob = bpy.data.objects.new(name, bpy.data.meshes.new(name))
         bm = bmesh.new()
@@ -116,6 +159,11 @@ def load(operator,
             uvs = [(st_to_uv @ st)[:2] for st in sts]
             for uv, loop in zip(uvs, bface.loops):
                 loop[uv_layer].uv = uv
+
+            # Apply material
+            if default_material:
+                ob.data.materials.append(default_material)
+                bface.material_index = ob.data.materials[:].index(default_material)
 
         # Transfer bmesh data to object mesh
         bm.to_mesh(ob.data)
