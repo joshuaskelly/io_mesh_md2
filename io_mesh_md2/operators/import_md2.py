@@ -95,10 +95,14 @@ def load(operator,
 
             material.node_tree.links.new(bsdf_node.inputs['Base Color'], texture_node.outputs['Color'])
 
-
-        # Create mesh
+        # Create object
         name = 'MD2'
         ob = bpy.data.objects.new(name, bpy.data.meshes.new(name))
+
+        if default_material:
+            ob.data.materials.append(default_material)
+
+        # Create mesh
         bm = bmesh.new()
         uv_layer = bm.loops.layers.uv.new()
 
@@ -162,7 +166,6 @@ def load(operator,
 
             # Apply material
             if default_material:
-                ob.data.materials.append(default_material)
                 bface.material_index = ob.data.materials[:].index(default_material)
 
         # Transfer bmesh data to object mesh
