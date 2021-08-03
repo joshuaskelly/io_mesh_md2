@@ -1,8 +1,8 @@
 bl_info = {
-    'name': 'Quake 2 engine MD2 format',
+    'name': 'Quake II MD2 format',
     'author': 'Joshua Skelton',
     'version': (0, 0, 1),
-    'blender': (2, 80, 0),
+    'blender': (2, 93, 0),
     'location': 'File > Import-Export',
     'description': 'Load a Quake 2 engine MD2 file.',
     'warning': '',
