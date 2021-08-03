@@ -2,13 +2,15 @@ bl_info = {
     'name': 'Quake II MD2 format',
     'author': 'Joshua Skelton',
     'version': (0, 0, 1),
-    'blender': (2, 93, 0),
+    'blender': (2, 90, 0),
     'location': 'File > Import-Export',
-    'description': 'Load a Quake 2 engine MD2 file.',
+    'description': 'MD2 IO meshes, UVs, materials, and textures.',
     'warning': '',
-    'wiki_url': '',
+    'wiki_url': 'https://github.com/joshuaskelly/io_mesh_md2/wiki',
+    'tracker_url': 'https://github.com/joshuaskelly/io_mesh_md2/issues',
     'support': 'COMMUNITY',
-    'category': 'Import-Export'}
+    'category': 'Import-Export'
+}
 
 __version__ = '.'.join(map(str, bl_info['version']))
 
