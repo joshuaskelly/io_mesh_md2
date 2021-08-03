@@ -29,10 +29,16 @@ def register():
     from io_mesh_md2 import operators
     operators.register()
 
+    from io_mesh_md2 import panels
+    panels.register()
+
 
 def unregister():
     from io_mesh_md2 import operators
     operators.unregister()
+
+    from io_mesh_md2 import panels
+    panels.unregister()
 
 
 if __name__ == '__main__':

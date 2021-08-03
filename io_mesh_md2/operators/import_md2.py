@@ -4,7 +4,7 @@ import struct
 import bpy
 import bmesh
 
-from bpy.props import StringProperty
+from bpy.props import BoolProperty, StringProperty
 from bpy_extras.io_utils import ImportHelper
 from mathutils import Matrix, Vector
 
@@ -30,6 +30,15 @@ class ImportMd2(bpy.types.Operator, ImportHelper):
         options={'HIDDEN'}
     )
 
+    use_unfiltered_textures: BoolProperty(
+        name='Use Unfiltered Textures',
+        description='Sets texture interpolation to closest.',
+        default=True
+    )
+
+    def draw(self, context):
+        pass
+
     def execute(self, context):
         from . import import_md2
         keywords = self.as_keywords(ignore=("filter_glob",))
@@ -40,6 +49,7 @@ class ImportMd2(bpy.types.Operator, ImportHelper):
 def load(operator,
          context,
          filepath='',
+         use_unfiltered_textures=True,
          **kwargs):
 
     if not md2.is_md2file(filepath):
@@ -96,7 +106,9 @@ def load(operator,
 
             texture_node = material.node_tree.nodes.new('ShaderNodeTexImage')
             texture_node.image = image
-            #texture_node.interpolation = 'Closest'
+
+            if use_unfiltered_textures:
+                texture_node.interpolation = 'Closest'
 
             material.node_tree.links.new(bsdf_node.inputs['Base Color'], texture_node.outputs['Color'])
 
