@@ -19,8 +19,8 @@ jobs:
       - name: Package addon
         run: |
           make
-    - name: Upload packaged addon
-      uses: actions/upload-artifact@v2
-      with:
-        name: addon
-        path: ./dist/*.zip
+      - name: Upload packaged addon
+        uses: actions/upload-artifact@v2
+        with:
+          name: addon
+          path: ./dist/*.zip
