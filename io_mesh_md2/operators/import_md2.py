@@ -70,6 +70,11 @@ def load(operator,
 
             palette = tuple(struct.iter_unpack('<BBB', pcx.palette))
             indexes = struct.unpack(f'<{pcx.width * pcx.height}B', pcx.pixels)
+
+            # Flip image vertically
+            rows = tuple(indexes[i:i+pcx.width] for i in range(0, len(indexes), pcx.width))
+            indexes = [i for row in reversed(rows) for i in row]
+
             pixels = [palette[i] for i in indexes]
             pixels = [rgb / 255 for pixel in pixels for rgb in (*pixel, 255)]
 
@@ -157,10 +162,18 @@ def load(operator,
                 ( 0,  0,  0,  1)
             ))
 
+            # Flip UVs vertically
+            vertical_flip = Matrix((
+                ( 1,  0,  0,  0),
+                ( 0, -1,  0,  1),
+                ( 0,  0,  0,  0),
+                ( 0,  0,  0,  1),
+            ))
+
             # Apply UV coordinates
             sts = [md2_file.st_vertexes[i] for i in triangle.st_vertexes]
             sts = [Vector((*st, 0, 1))for st in sts]
-            uvs = [(st_to_uv @ st)[:2] for st in sts]
+            uvs = [(vertical_flip @ st_to_uv @ st)[:2] for st in sts]
             for uv, loop in zip(uvs, bface.loops):
                 loop[uv_layer].uv = uv
 
