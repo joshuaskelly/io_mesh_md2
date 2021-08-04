@@ -241,7 +241,7 @@ def load(operator,
 
 
 def menu_func_import(self, context):
-    self.layout.operator(ImportMd2.bl_idname, text='Quake MD2 (.md2)')
+    self.layout.operator(ImportMd2.bl_idname, text='Quake II MD2 (.md2)')
 
 
 def register():
