@@ -25,9 +25,6 @@ import io_mesh_md2.reload as reload
 
 
 def register():
-    from io_mesh_md2 import patch
-    patch.add_local_modules_to_path()
-
     from io_mesh_md2 import operators
     operators.register()
 
