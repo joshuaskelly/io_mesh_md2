@@ -1,7 +1,7 @@
 bl_info = {
     'name': 'Quake II MD2 format',
     'author': 'Joshua Skelton',
-    'version': (1, 0, 1),
+    'version': (1, 0, 2),
     'blender': (2, 90, 0),
     'location': 'File > Import-Export',
     'description': 'MD2 IO meshes, UVs, materials, and textures.',
