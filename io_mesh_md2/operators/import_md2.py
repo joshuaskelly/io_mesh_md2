@@ -11,7 +11,7 @@ from mathutils import Matrix, Vector
 from io_mesh_md2.perfmon import PerformanceMonitor
 from io_mesh_md2.pcx import Pcx
 
-from vgio.quake2 import md2
+from vgio.quake2 import anorms, md2
 
 
 performance_monitor = None
@@ -31,8 +31,14 @@ class ImportMd2(bpy.types.Operator, ImportHelper):
     )
 
     use_unfiltered_textures: BoolProperty(
-        name='Use Unfiltered Textures',
+        name='Unfiltered Textures',
         description='Sets texture interpolation to closest.',
+        default=True
+    )
+
+    use_custom_normals: BoolProperty(
+        name='Custom Normals',
+        description='Import custom normals.',
         default=True
     )
 
@@ -49,6 +55,7 @@ class ImportMd2(bpy.types.Operator, ImportHelper):
 def load(operator,
          context,
          filepath='',
+         use_custom_normals=True,
          use_unfiltered_textures=True,
          **kwargs):
 
@@ -154,7 +161,7 @@ def load(operator,
 
         # Process triangles
         for triangle in md2_file.triangles:
-            bverts = [bm.verts[i] for i in triangle.vertexes]
+            bverts = [bm.verts[i] for i in reversed(triangle.vertexes)]
 
             try:
                 # Create a new face
@@ -183,7 +190,7 @@ def load(operator,
             ))
 
             # Apply UV coordinates
-            sts = [md2_file.st_vertexes[i] for i in triangle.st_vertexes]
+            sts = [md2_file.st_vertexes[i] for i in reversed(triangle.st_vertexes)]
             sts = [Vector((*st, 0, 1))for st in sts]
             uvs = [(vertical_flip @ st_to_uv @ st)[:2] for st in sts]
             for uv, loop in zip(uvs, bface.loops):
@@ -197,18 +204,22 @@ def load(operator,
         bm.to_mesh(ob.data)
         bm.free()
 
+        # Apply normal data
+        if use_custom_normals:
+            mesh = ob.data
+            mesh.use_auto_smooth = True
+            mesh.normals_split_custom_set([anorms[frame.vertexes[loop.vertex_index].light_normal_index] for loop in mesh.loops])
+
         # Add object to scene
         bpy.context.scene.collection.objects.link(ob)
 
         # Create shapekeys
         shape_key= ob.shape_key_add(name=frame.name)
         shape_key.interpolation = 'KEY_LINEAR'
-        #shape_key.use_relative = True
 
         for frame in md2_file.frames[1:]:
             shape_key = ob.shape_key_add(name=frame.name)
             shape_key.interpolation = 'KEY_LINEAR'
-            #shape_key.use_relative = True
 
             # Scale matrix
             sx, sy, sz = frame.scale

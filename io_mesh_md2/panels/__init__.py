@@ -1,8 +1,9 @@
-from io_mesh_md2.panels import import_panel
+from io_mesh_md2.panels import import_panel, material_import_panel
 
 
 modules = (
     import_panel,
+    material_import_panel,
 )
 
 def register():
