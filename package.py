@@ -49,7 +49,7 @@ def run():
         pass
 
     zip_entries = gather_files('io_mesh_md2')
-    zip_entries += gather_files(os.path.dirname(vgio.__file__), 'io_mesh_md2')
+    zip_entries += gather_files(os.path.dirname(vgio.__file__), os.path.join('io_mesh_md2', 'modules'))
 
     filename = f'io_mesh_md2-{io_mesh_md2.__version__}.zip'
     filepath = os.path.abspath(os.path.join('dist', filename))
