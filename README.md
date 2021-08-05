@@ -2,7 +2,7 @@
 
 [![Blender 2.90](https://img.shields.io/badge/blender-2.90-%23f4792b.svg)]() [![Python 3.9](https://img.shields.io/badge/python-3.9-blue.svg)]() [![Discord](https://img.shields.io/badge/discord-chat-7289DA.svg)](https://discord.gg/KvwmdXA)
 
-io_mesh_md2 is a Blender 2.90 addon for importing Quake II MD2 files.
+io_mesh_md2 is a Blender 2.93 addon for importing Quake II MD2 files.
 
 ## Installation
 1. Download [latest version](https://github.com/joshuaskelly/io_mesh_md2/releases/latest) of io_mesh_md2.
