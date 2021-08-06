@@ -1,11 +1,11 @@
 import bpy
 
 
-class MD2_PT_import_settings(bpy.types.Panel):
-    bl_idname = 'MD2_PT_import_settings'
+class MD2_PT_material_import_settings(bpy.types.Panel):
+    bl_idname = 'MD2_PT_material_import_settings'
     bl_space_type = 'FILE_BROWSER'
     bl_region_type = 'TOOL_PROPS'
-    bl_label = 'Include'
+    bl_label = 'Materials'
     bl_parent_id = 'FILE_PT_operator'
 
     @classmethod
@@ -24,12 +24,12 @@ class MD2_PT_import_settings(bpy.types.Panel):
         operator = sfile.active_operator
 
         sublayout = layout.column(heading="")
-        sublayout.prop(operator, 'use_custom_normals', text="Custom Normals")
+        sublayout.prop(operator, 'use_unfiltered_textures', text="Unfiltered Textures")
 
 
 def register():
-    bpy.utils.register_class(MD2_PT_import_settings)
+    bpy.utils.register_class(MD2_PT_material_import_settings)
 
 
 def unregister():
-    bpy.utils.unregister_class(MD2_PT_import_settings)
+    bpy.utils.unregister_class(MD2_PT_material_import_settings)
