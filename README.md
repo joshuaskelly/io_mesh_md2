@@ -1,6 +1,6 @@
 # io_mesh_md2
 
-[![Blender 2.93](https://img.shields.io/badge/blender-2.93-%23f4792b.svg)]() [![Python 3.9](https://img.shields.io/badge/python-3.9-blue.svg)]() [![Discord](https://img.shields.io/badge/discord-chat-7289DA.svg)](https://discord.gg/KvwmdXA)
+[![Blender 2.93](https://img.shields.io/badge/blender-2.93-%23f4792b.svg?logo=blender&logoColor=whitesmoke)]() [![Python 3.9](https://img.shields.io/badge/python-3.9-blue.svg?logo=python&logoColor=whitesmoke)]() ![Discord](https://img.shields.io/discord/349215487516737536?logo=Discord&logoColor=whitesmoke&label=Pixel%20Steak%20Community&color=5865F2)
 
 io_mesh_md2 is a Blender 2.93 addon for importing Quake II MD2 files.
 
